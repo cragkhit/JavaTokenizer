@@ -53,7 +53,7 @@ public class Main {
 		options.addOption("f", "file", true, "the input file to normalise");
 		options.addOption("v", "nval", true, "the value of n in ngram");
 		options.addOption("l", "level", true, "normalisation level (hi [default]/lo)");
-		options.addOption("n", "ngram", false, "convert tokens into ngram [default=no]");
+		options.addOption("n", "ngram", true, "convert tokens into ngram (true/false) [default=false]");
 		options.addOption("h", "help", false, "print help");
 		
 		// if no parameters given, print help
@@ -89,7 +89,10 @@ public class Main {
 			}
 
 			if (line.hasOption("n")) {
-				ngram = Settings.Ngram.ON;
+				if (line.getOptionValue("n").equals("true"))
+					ngram = Settings.Ngram.ON;
+				else
+					ngram = Settings.Ngram.OFF;
 			}
 			
 		} catch (ParseException exp) {
