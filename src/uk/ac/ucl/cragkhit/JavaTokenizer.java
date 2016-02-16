@@ -18,7 +18,7 @@ public class JavaTokenizer {
 	private HashMap<String, Integer> javaPackagesMap = new HashMap<String, Integer>();
 	private ArrayList<String> wordList = new ArrayList<String>();
 	private int MODE = Settings.Normalize.MED_NORM;
-	private boolean newline = Settings.Newline;
+	private boolean newline = Settings.NoNewline;
 
 	public JavaTokenizer() {
 		setUpKeywordMap();
@@ -96,8 +96,8 @@ public class JavaTokenizer {
 				tokens.add("C");
 				break;
 			case StreamTokenizer.TT_EOL:
-				if (newline = Settings.Newline)
-					tokens.add("\n");
+				// if (newline == Settings.Newline)
+				//	tokens.add("\n");
 				break;
 			case StreamTokenizer.TT_EOF:
 				break;
