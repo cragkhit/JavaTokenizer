@@ -75,7 +75,7 @@ public class Main {
 
 		options.addOption("f", "file", true, "the input file to normalise");
 		options.addOption("v", "nval", true, "the value of n in ngram");
-		options.addOption("l", "level", true, "normalisation level (hi [default]/lo)");
+		options.addOption("l", "level", true, "normalisation level (hi [default]/lo/escape)");
 		options.addOption("n", "ngram", true, "convert tokens into ngram (true/false) [default=false]");
 		options.addOption("h", "help", false, "print help");
 
@@ -127,7 +127,7 @@ public class Main {
 
 	private static void showHelp() {
 		HelpFormatter formater = new HelpFormatter();
-		formater.printHelp("JavaTokenizer (v 0.2)\njava -jar checker.jar", options);
+		formater.printHelp("JavaTokenizer (v 0.3)\njava -jar checker.jar", options);
 		System.exit(0);
 	}
 }
