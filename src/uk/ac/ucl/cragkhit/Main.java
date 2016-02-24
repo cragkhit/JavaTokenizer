@@ -1,5 +1,8 @@
 package uk.ac.ucl.cragkhit;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.cli.CommandLine;
@@ -21,17 +24,30 @@ public class Main {
 		processCommandLine(args);
 
 		JavaTokenizer tokenizer = new JavaTokenizer(mode);
-		nGramGenerator ngen = new nGramGenerator(nVal);
-		try {
-			ArrayList<String> tokens = tokenizer.getTokensFromFile(inputFile);
-			if (ngram == Settings.Ngram.ON) {
-				ArrayList<String> ngrams = ngen.generateNGramsFromJavaTokens(tokens);
-				printArray(ngrams, false);
-			} else {
-				printArray(tokens, true);
+		
+		if (mode == Settings.Normalize.ESCAPE) {
+			try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					ArrayList<String> tokens = tokenizer.noNormalizeAToken(escapeString(line).trim());
+					printArray(tokens, false);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} else {
+			nGramGenerator ngen = new nGramGenerator(nVal);
+			try {
+				ArrayList<String> tokens = tokenizer.getTokensFromFile(inputFile);
+				if (ngram == Settings.Ngram.ON) {
+					ArrayList<String> ngrams = ngen.generateNGramsFromJavaTokens(tokens);
+					printArray(ngrams, false);
+				} else {
+					printArray(tokens, true);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -45,8 +61,15 @@ public class Main {
 		}
 	}
 
+	private static String escapeString(String input) {
+		String output = "";
+		output += input.replace("\"", "\\\"").replace("\\", "\\\\").replace("/", "\\/").replace("\b", "\\b")
+				.replace("\f", "\\f").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
+		return output;
+	}
+
 	private static void processCommandLine(String[] args) {
-		
+
 		// create the command line parser
 		CommandLineParser parser = new DefaultParser();
 
@@ -55,13 +78,13 @@ public class Main {
 		options.addOption("l", "level", true, "normalisation level (hi [default]/lo)");
 		options.addOption("n", "ngram", true, "convert tokens into ngram (true/false) [default=false]");
 		options.addOption("h", "help", false, "print help");
-		
+
 		// if no parameters given, print help
 		if (args.length == 0) {
 			showHelp();
 			System.exit(0);
 		}
-		
+
 		try {
 			// parse the command line arguments
 			CommandLine line = parser.parse(options, args);
@@ -84,6 +107,8 @@ public class Main {
 			if (line.hasOption("l")) {
 				if (line.getOptionValue("l").toLowerCase().equals("lo"))
 					mode = Settings.Normalize.LO_NORM;
+				else if (line.getOptionValue("l").toLowerCase().equals("esc"))
+					mode = Settings.Normalize.ESCAPE;
 				else
 					mode = Settings.Normalize.HI_NORM;
 			}
@@ -94,7 +119,7 @@ public class Main {
 				else
 					ngram = Settings.Ngram.OFF;
 			}
-			
+
 		} catch (ParseException exp) {
 			System.out.println("Warning: " + exp.getMessage());
 		}
@@ -102,7 +127,7 @@ public class Main {
 
 	private static void showHelp() {
 		HelpFormatter formater = new HelpFormatter();
-		formater.printHelp("java -jar checker.jar", options);
+		formater.printHelp("JavaTokenizer (v 0.2)\njava -jar checker.jar", options);
 		System.exit(0);
 	}
 }
