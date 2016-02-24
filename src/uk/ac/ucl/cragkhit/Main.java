@@ -63,7 +63,7 @@ public class Main {
 
 	private static String escapeString(String input) {
 		String output = "";
-		output += input.replace("\"", "\\\"").replace("\\", "\\\\").replace("/", "\\/").replace("\b", "\\b")
+		output += input.replace("\\", "\\\\").replace("\"", "\\\"").replace("/", "\\/").replace("\b", "\\b")
 				.replace("\f", "\\f").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
 		return output;
 	}
