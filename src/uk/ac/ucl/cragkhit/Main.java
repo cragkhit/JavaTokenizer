@@ -2,7 +2,6 @@ package uk.ac.ucl.cragkhit;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.commons.cli.CommandLine;
@@ -26,6 +25,7 @@ public class Main {
 		JavaTokenizer tokenizer = new JavaTokenizer(mode);
 		
 		if (mode == Settings.Normalize.ESCAPE) {
+			// generate JSON-escaped Java code 
 			try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
 				String line;
 				while ((line = br.readLine()) != null) {
@@ -40,9 +40,11 @@ public class Main {
 			try {
 				ArrayList<String> tokens = tokenizer.getTokensFromFile(inputFile);
 				if (ngram == Settings.Ngram.ON) {
+					// convert the tokens to ngrams
 					ArrayList<String> ngrams = ngen.generateNGramsFromJavaTokens(tokens);
 					printArray(ngrams, false);
 				} else {
+					// if not, just use the tokens
 					printArray(tokens, true);
 				}
 			} catch (Exception e) {
@@ -51,6 +53,11 @@ public class Main {
 		}
 	}
 
+	/***
+	 * Print the give array list to string
+	 * @param arr the array to be printed
+	 * @param pretty pretty printing or not
+	 */
 	public static void printArray(ArrayList<String> arr, boolean pretty) {
 		for (int i = 0; i < arr.size(); i++) {
 			if (pretty && arr.get(i).equals("\n")) {
@@ -61,6 +68,11 @@ public class Main {
 		}
 	}
 
+	/***
+	 * Escape the Java code to be conformed to JSON format
+	 * @param input the original Java code
+	 * @return output the escaped string of Java
+	 */
 	private static String escapeString(String input) {
 		String output = "";
 		output += input.replace("\\", "\\\\").replace("\"", "\\\"").replace("/", "\\/").replace("\b", "\\b")
@@ -68,6 +80,10 @@ public class Main {
 		return output;
 	}
 
+	/***
+	 * Processor of the command line parameter
+	 * @param args command line arguments
+	 */
 	private static void processCommandLine(String[] args) {
 
 		// create the command line parser
@@ -125,9 +141,13 @@ public class Main {
 		}
 	}
 
+	
+	/***
+	 * Printing help
+	 */
 	private static void showHelp() {
 		HelpFormatter formater = new HelpFormatter();
-		formater.printHelp("JavaTokenizer (v 0.3)\njava -jar checker.jar", options);
+		formater.printHelp("JavaTokenizer (v 0.4)\njava -jar checker.jar", options);
 		System.exit(0);
 	}
 }
