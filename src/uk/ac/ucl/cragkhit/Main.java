@@ -123,20 +123,29 @@ public class Main {
 				char[] normOptions = line.getOptionValue("l").toLowerCase().toCharArray();
 				for (char c: normOptions) {
 					// setting all normalisation options: w, d, j, p, k, v, s
-					if (c == 'w')
+					if (c == 'w') {
 						modes.setWord(Settings.Normalize.WORD_NORM_ON);
-					else if (c=='d')
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					} else if (c=='d') {
 						modes.setDatatype(Settings.Normalize.DATATYPE_NORM_ON);
-					else if (c=='j')
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					}
+					else if (c=='j') {
 						modes.setJavaClass(Settings.Normalize.JAVACLASS_NORM_ON);
-					else if (c=='p')
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					} else if (c=='p') {
 						modes.setJavaPackage(Settings.Normalize.JAVAPACKAGE_NORM_ON);
-					else if (c=='k')
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					} else if (c=='k') {
 						modes.setKeyword(Settings.Normalize.KEYWORD_NORM_ON);
-					else if (c=='v')
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					} else if (c=='v') {
 						modes.setValue(Settings.Normalize.VALUE_NORM_ON);
-					else if (c=='s')
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					} else if (c=='s') {
 						modes.setString(Settings.Normalize.STRING_NORM_ON);
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					}
 					else if (c=='x') {
 						modes.setWord(Settings.Normalize.WORD_NORM_OFF);
 						modes.setDatatype(Settings.Normalize.DATATYPE_NORM_OFF);
@@ -145,6 +154,7 @@ public class Main {
 						modes.setKeyword(Settings.Normalize.KEYWORD_NORM_OFF);
 						modes.setValue(Settings.Normalize.VALUE_NORM_OFF);
 						modes.setValue(Settings.Normalize.STRING_NORM_OFF);
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					} else if (c=='e') {
 						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					}
@@ -169,7 +179,7 @@ public class Main {
 	 */
 	private static void showHelp() {
 		HelpFormatter formater = new HelpFormatter();
-		formater.printHelp("JavaTokenizer (v 0.4)\njava -jar checker.jar", options);
+		formater.printHelp("JavaTokenizer (v 0.5)\njava -jar checker.jar", options);
 		System.exit(0);
 	}
 }
