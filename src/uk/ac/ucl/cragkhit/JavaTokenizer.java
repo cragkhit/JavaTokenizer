@@ -196,9 +196,12 @@ public class JavaTokenizer {
 			} 
 			
 			String word = tokenizer.sval;
-			if (!Character.isUpperCase(word.charAt(0)) && !keywordMap.containsKey(word)
-					&& !datatypeMap.containsKey(word) && !javaClassMap.containsKey(word)
-					&& !javaPackagesMap.containsKey(word)) {
+			// Convert keywords to "K"
+			if (keywordMap.containsKey(word)) {
+				tokens.add("K");
+			}
+			else if (!Character.isUpperCase(word.charAt(0)) && !datatypeMap.containsKey(word) 
+					&& !javaClassMap.containsKey(word) && !javaPackagesMap.containsKey(word)) {
 				// System.out.println("W = " + word);
 				tokens.add("W");
 				if (!wordMap.containsKey(word)) {
@@ -238,7 +241,7 @@ public class JavaTokenizer {
 			break;
 		case StreamTokenizer.TT_EOL:
 			// if (newline == Settings.Newline)
-			// tokens.add("\n");
+			tokens.add("\n");
 			break;
 		case StreamTokenizer.TT_EOF:
 			break;

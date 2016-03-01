@@ -10,6 +10,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class Main {
 	private static Options options = new Options();
@@ -74,10 +75,7 @@ public class Main {
 	 * @return output the escaped string of Java
 	 */
 	private static String escapeString(String input) {
-		String output = "";
-		output += input.replace("\\", "\\\\").replace("\"", "\\\"").replace("/", "\\/").replace("\b", "\\b")
-				.replace("\f", "\\f").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
-		return output;
+		return StringEscapeUtils.escapeJson(input);
 	}
 
 	/***
