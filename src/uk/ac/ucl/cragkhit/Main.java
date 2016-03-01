@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 public class Main {
 	private static Options options = new Options();
 	private static int nVal = 4;
-	private static int mode = Settings.Normalize.MED_NORM;
+	private static TokenizerMode modes = new TokenizerMode();
 	private static int ngram = Settings.Ngram.OFF;
 	private static String inputFile = "";
 
@@ -23,9 +23,9 @@ public class Main {
 		// process the command line arguments
 		processCommandLine(args);
 
-		JavaTokenizer tokenizer = new JavaTokenizer(mode);
+		JavaTokenizer tokenizer = new JavaTokenizer(modes);
 		
-		if (mode == Settings.Normalize.ESCAPE) {
+		if (modes.getEscape() == Settings.Normalize.ESCAPE_ON) {
 			// generate JSON-escaped Java code 
 			try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
 				String line;
@@ -89,7 +89,8 @@ public class Main {
 
 		options.addOption("f", "file", true, "the input file to normalise");
 		options.addOption("v", "nval", true, "the value of n in ngram");
-		options.addOption("l", "level", true, "normalisation level (hi [default]/lo/escape)");
+		options.addOption("l", "level", true, "normalisation. It can be a combination of x (none), w (words), d (datatypes), "
+				+ "j (Java classes), p (Java packages), k (keywords), v (values), s (strings), e (escape). For example: wkvs");
 		options.addOption("n", "ngram", true, "convert tokens into ngram (true/false) [default=false]");
 		options.addOption("h", "help", false, "print help");
 
@@ -119,12 +120,35 @@ public class Main {
 			}
 
 			if (line.hasOption("l")) {
-				if (line.getOptionValue("l").toLowerCase().equals("lo"))
-					mode = Settings.Normalize.LO_NORM;
-				else if (line.getOptionValue("l").toLowerCase().equals("esc"))
-					mode = Settings.Normalize.ESCAPE;
-				else
-					mode = Settings.Normalize.HI_NORM;
+				char[] normOptions = line.getOptionValue("l").toLowerCase().toCharArray();
+				for (char c: normOptions) {
+					// setting all normalisation options: w, d, j, p, k, v, s
+					if (c == 'w')
+						modes.setWord(Settings.Normalize.WORD_NORM_ON);
+					else if (c=='d')
+						modes.setDatatype(Settings.Normalize.DATATYPE_NORM_ON);
+					else if (c=='j')
+						modes.setJavaClass(Settings.Normalize.JAVACLASS_NORM_ON);
+					else if (c=='p')
+						modes.setJavaPackage(Settings.Normalize.JAVAPACKAGE_NORM_ON);
+					else if (c=='k')
+						modes.setKeyword(Settings.Normalize.KEYWORD_NORM_ON);
+					else if (c=='v')
+						modes.setValue(Settings.Normalize.VALUE_NORM_ON);
+					else if (c=='s')
+						modes.setString(Settings.Normalize.STRING_NORM_ON);
+					else if (c=='x') {
+						modes.setWord(Settings.Normalize.WORD_NORM_OFF);
+						modes.setDatatype(Settings.Normalize.DATATYPE_NORM_OFF);
+						modes.setJavaClass(Settings.Normalize.JAVACLASS_NORM_OFF);
+						modes.setJavaPackage(Settings.Normalize.JAVAPACKAGE_NORM_OFF);
+						modes.setKeyword(Settings.Normalize.KEYWORD_NORM_OFF);
+						modes.setValue(Settings.Normalize.VALUE_NORM_OFF);
+						modes.setValue(Settings.Normalize.STRING_NORM_OFF);
+					} else if (c=='e') {
+						modes.setEscape(Settings.Normalize.ESCAPE_ON);
+					}
+				}
 			}
 
 			if (line.hasOption("n")) {
