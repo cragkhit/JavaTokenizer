@@ -43,10 +43,10 @@ public class Main {
 				if (ngram == Settings.Ngram.ON) {
 					// convert the tokens to ngrams
 					ArrayList<String> ngrams = ngen.generateNGramsFromJavaTokens(tokens);
-					printArray(ngrams, false);
+					System.out.println(escapeString(printArray(ngrams, false)));
 				} else {
 					// if not, just use the tokens
-					printArray(tokens, true);
+					System.out.println(escapeString(printArray(tokens, true)));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -59,14 +59,16 @@ public class Main {
 	 * @param arr the array to be printed
 	 * @param pretty pretty printing or not
 	 */
-	public static void printArray(ArrayList<String> arr, boolean pretty) {
+	public static String printArray(ArrayList<String> arr, boolean pretty) {
+		String s = "";
 		for (int i = 0; i < arr.size(); i++) {
 			if (pretty && arr.get(i).equals("\n")) {
 				System.out.print(arr.get(i));
 				continue;
 			}
-			System.out.print(arr.get(i) + " ");
+			s += arr.get(i) + " ";
 		}
+		return s;
 	}
 
 	/***
@@ -125,26 +127,19 @@ public class Main {
 					// setting all normalisation options: w, d, j, p, k, v, s
 					if (c == 'w') {
 						modes.setWord(Settings.Normalize.WORD_NORM_ON);
-						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					} else if (c=='d') {
 						modes.setDatatype(Settings.Normalize.DATATYPE_NORM_ON);
-						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					}
 					else if (c=='j') {
 						modes.setJavaClass(Settings.Normalize.JAVACLASS_NORM_ON);
-						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					} else if (c=='p') {
 						modes.setJavaPackage(Settings.Normalize.JAVAPACKAGE_NORM_ON);
-						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					} else if (c=='k') {
 						modes.setKeyword(Settings.Normalize.KEYWORD_NORM_ON);
-						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					} else if (c=='v') {
 						modes.setValue(Settings.Normalize.VALUE_NORM_ON);
-						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					} else if (c=='s') {
 						modes.setString(Settings.Normalize.STRING_NORM_ON);
-						modes.setEscape(Settings.Normalize.ESCAPE_ON);
 					}
 					else if (c=='x') {
 						modes.setWord(Settings.Normalize.WORD_NORM_OFF);

@@ -95,4 +95,9 @@ public class TokenizerMode {
 	public void setDatatype(int datatype) {
 		this.datatype = datatype;
 	}
+	
+	public String toString() {
+		return "w=" + this.word + ",k=" + this.keyword + ",j=" + this.javaClass + ",p=" + this.javaPackage + ",s="
+				+ this.string + ",v=" + this.value + ",e=" + this.escape + ",d=" + this.datatype;
+	}
 }
