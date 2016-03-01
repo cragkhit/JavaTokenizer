@@ -56,115 +56,6 @@ public class JavaTokenizer {
 		return tokens;
 	}
 
-	private void hiNormalizeAToken(int tok) {
-		switch (tok) {
-		case StreamTokenizer.TT_NUMBER:
-			if (prevChar.equals("=")) {
-				tokens.add("=");
-				prevChar = "";
-			} else if (prevChar.equals("+") || prevChar.equals("-") || prevChar.equals("*") || prevChar.equals("/")
-					|| prevChar.equals("%") || prevChar.equals("<") || prevChar.equals(">")) {
-				tokens.add(prevChar);
-				prevChar = "";
-			}
-			tokens.add("V");
-			break;
-		case StreamTokenizer.TT_WORD:
-			if (prevChar.equals("=")) {
-				tokens.add("=");
-				prevChar = "";
-			} else if (prevChar.equals("+") || prevChar.equals("-") || prevChar.equals("*") || prevChar.equals("/")
-					|| prevChar.equals("%") || prevChar.equals("<") || prevChar.equals(">")) {
-				tokens.add(prevChar);
-				prevChar = "";
-			}
-
-			tokens.add("W");
-
-			break;
-		case '"':
-			// String doublequote = tokenizer.sval;
-			if (prevChar.equals("=")) {
-				tokens.add("=");
-				prevChar = "";
-			} else if (prevChar.equals("+") || prevChar.equals("-") || prevChar.equals("*") || prevChar.equals("/")
-					|| prevChar.equals("%") || prevChar.equals("<") || prevChar.equals(">")) {
-				tokens.add(prevChar);
-				prevChar = "";
-			}
-			tokens.add("S");
-			break;
-		case '\'':
-			// String singlequote = tokenizer.sval;
-			if (prevChar.equals("=")) {
-				tokens.add("=");
-				prevChar = "";
-			} else if (prevChar.equals("+") || prevChar.equals("-") || prevChar.equals("*") || prevChar.equals("/")
-					|| prevChar.equals("%") || prevChar.equals("<") || prevChar.equals(">")) {
-				tokens.add(prevChar);
-				prevChar = "";
-			}
-			tokens.add("C");
-			break;
-		case StreamTokenizer.TT_EOL:
-			// if (newline == Settings.Newline)
-			// tokens.add("\n");
-			break;
-		case StreamTokenizer.TT_EOF:
-			break;
-		default:
-			char character = (char) tokenizer.ttype;
-			String cStr = String.valueOf(character);
-			if (!Character.isWhitespace(character) && character != '\n' && character != '\r') {
-				if (cStr.equals("+") || cStr.equals("-") || cStr.equals("*") || cStr.equals("/") || cStr.equals("%")) {
-					// nothing found before this
-					if (prevChar.equals(""))
-						prevChar = cStr;
-					else if (prevChar.equals("+")) {
-						tokens.add("++");
-						prevChar = "";
-					} else if (prevChar.equals("-")) {
-						tokens.add("--");
-						prevChar = "";
-					}
-				} else if (cStr.equals(">") || cStr.equals("<")) {
-					prevChar = cStr;
-				} else if (cStr.equals("&") || cStr.equals("|")) {
-					if (prevChar.equals("&") || prevChar.equals("|")) {
-						tokens.add(prevChar + cStr);
-						prevChar = "";
-					} else {
-						prevChar = cStr;
-					}
-				} else if (cStr.equals("=")) {
-					if (prevChar.equals("=") || prevChar.equals("!")) {
-						tokens.add(prevChar + cStr);
-						prevChar = "";
-					} else if (prevChar.equals(">") || prevChar.equals("<")) {
-						tokens.add(prevChar + cStr);
-						prevChar = "";
-					} else if (prevChar.equals("+") || prevChar.equals("-") || prevChar.equals("*")
-							|| prevChar.equals("/") || prevChar.equals("%")) {
-						tokens.add(prevChar + cStr);
-						prevChar = "";
-					} else {
-						prevChar = "=";
-					}
-				} else if (cStr.equals("!")) {
-					prevChar = cStr;
-				} else if (prevChar.equals("=")) {
-					tokens.add("=");
-					tokens.add(cStr);
-					prevChar = "";
-				} else {
-					tokens.add(cStr);
-					prevChar = "";
-				}
-			}
-			break;
-		}
-	}
-
 	public void normalizeAToken(int tok) throws Exception {
 		switch (tok) {
 		case StreamTokenizer.TT_NUMBER:
@@ -231,8 +122,16 @@ public class JavaTokenizer {
 				String[] splitWord = word.split("\\.");
 				for (String s : splitWord) {
 					//System.out.println("s=" + s);
-					if (javaPackagesMap.containsKey(s) && modes.getJavaPackage() == Settings.Normalize.JAVAPACKAGE_NORM_ON) {
-							tokens.add("P");
+					if (javaPackagesMap.containsKey(s)
+							&& modes.getJavaPackage() == Settings.Normalize.JAVAPACKAGE_NORM_ON) {
+						tokens.add("P");
+					} else if (javaClassMap.containsKey(s)
+							&& modes.getJavaClass() == Settings.Normalize.JAVACLASS_NORM_ON) {
+						tokens.add("J");
+					} else if (keywordMap.containsKey(word) && modes.getKeyword() == Settings.Normalize.KEYWORD_NORM_ON) {
+						tokens.add("K");
+					} else if (modes.getWord() == Settings.Normalize.WORD_NORM_ON) {
+						tokens.add("W");
 					} else {
 						tokens.add(s);
 					}
