@@ -46,7 +46,8 @@ public class Main {
 					System.out.print(escapeString(printArray(ngrams, false)));
 				} else {
 					// if not, just use the tokens
-					System.out.print(escapeString(printArray(tokens, true)));
+					// System.out.print(escapeString(printArray(tokens, true)));
+					System.out.print(printArray(tokens, true));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -62,10 +63,10 @@ public class Main {
 	public static String printArray(ArrayList<String> arr, boolean pretty) {
 		String s = "";
 		for (int i = 0; i < arr.size(); i++) {
-			if (pretty && arr.get(i).equals("\n")) {
-				System.out.print(arr.get(i));
-				continue;
-			}
+//			if (pretty && arr.get(i).equals("\n")) {
+//				System.out.print(arr.get(i));
+//				continue;
+//			}
 			s += arr.get(i) + " ";
 		}
 		return s;
