@@ -31,7 +31,7 @@ public class Main {
 				String line;
 				while ((line = br.readLine()) != null) {
 					ArrayList<String> tokens = tokenizer.noNormalizeAToken(escapeString(line).trim());
-					printArray(tokens, false);
+					System.out.print(printArray(tokens, false));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -43,10 +43,10 @@ public class Main {
 				if (ngram == Settings.Ngram.ON) {
 					// convert the tokens to ngrams
 					ArrayList<String> ngrams = ngen.generateNGramsFromJavaTokens(tokens);
-					System.out.println(escapeString(printArray(ngrams, false)));
+					System.out.print(escapeString(printArray(ngrams, false)));
 				} else {
 					// if not, just use the tokens
-					System.out.println(escapeString(printArray(tokens, true)));
+					System.out.print(escapeString(printArray(tokens, true)));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -120,7 +120,8 @@ public class JavaTokenizer {
 			} else if (word.contains(".")) {
 				//System.out.println("|" + word + "|");
 				String[] splitWord = word.split("\\.");
-				for (String s : splitWord) {
+				for (int i=0; i<splitWord.length; i++) {
+					String s = splitWord[i];
 					//System.out.println("s=" + s);
 					if (javaPackagesMap.containsKey(s)
 							&& modes.getJavaPackage() == Settings.Normalize.JAVAPACKAGE_NORM_ON) {
@@ -135,7 +136,9 @@ public class JavaTokenizer {
 					} else {
 						tokens.add(s);
 					}
-					tokens.add(".");
+					// don't add . at the end.
+					if (i!= splitWord.length-1) 
+						tokens.add(".");
 				}
 			} else if (modes.getWord() == Settings.Normalize.WORD_NORM_ON) {
 				tokens.add("W");
